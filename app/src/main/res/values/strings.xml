@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Codeexample</string>
+
+    <!-- Details -->
+    <string name="details_id">The id is: %d</string>
+    <string name="details_title">Title: %s</string>
+    <string name="details_body">Body: %s</string>
+    <string name="details_user_id">The user id is: %d</string>
 </resources>

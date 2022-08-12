@@ -1,4 +1,25 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript{
+    ext{
+        daggerVersion = "2.43.1"
+        rxJavaVersion = "3.1.5"
+        rxAndroidVersion = "3.0.0"
+        rxKotlinVersion = "3.0.1"
+        roomVersion = "2.4.3"
+        retrofitVersion = "2.9.0"
+        gsonVersion = "2.9.0"
+        navVersion = "2.5.1"
+    }
+
+    repositories {
+        google()
+    }
+
+    dependencies {
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion"
+    }
+}
+
 plugins {
     id 'com.android.application' version '7.2.2' apply false
     id 'com.android.library' version '7.2.2' apply false
