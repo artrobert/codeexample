@@ -49,8 +49,18 @@ class PostsFragment : Fragment() {
         vm.postsLiveData.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Resource.Success -> {
-                    result.data?.let { adapter.addAll(it) }
-                    binding.invisible = true
+                    result.data?.let {
+                        if (it.isEmpty()) {
+                            Toast.makeText(
+                                context,
+                                "Local database is empty, please wait for network call",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            adapter.addAll(it)
+                            binding.invisible = true
+                        }
+                    }
                 }
                 is Resource.Loading -> {
                     binding.invisible = false
@@ -61,6 +71,8 @@ class PostsFragment : Fragment() {
                 }
             }
         }
+
+        vm.getPosts()
     }
 
     private fun initViews() {

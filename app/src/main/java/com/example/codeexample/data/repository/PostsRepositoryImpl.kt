@@ -2,6 +2,7 @@ package com.example.codeexample.data.repository
 
 import android.util.Log
 import com.example.codeexample.data.Resource
+import com.example.codeexample.data.Source
 import com.example.codeexample.data.models.Post
 import com.example.codeexample.data.network.PostsApi
 import com.example.codeexample.data.storage.AppDatabase
@@ -19,26 +20,29 @@ class PostsRepositoryImpl @Inject constructor(
     }
 
     override fun getPosts(): Observable<Resource<List<Post>>> =
-        Observable.concat(
+        Observable.merge(
             database.postsDao().getAll()
-                .subscribeOn(Schedulers.io()),
+                .subscribeOn(Schedulers.computation())
+                .map { Resource.Success(it, Source.LOCAL) },
             networkApi.getPosts()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .doOnNext {
                     Log.d(TAG, "GetAll call was successful")
                     database.postsDao().insertAll(it)
-                })
-            .map { Resource.Success(it) }
+                }
+                .map { Resource.Success(it, Source.REMOTE) })
 
     override fun getPost(id: Int): Observable<Resource<Post>> =
         Observable.concat(
             database.postsDao().getById(id)
-                .subscribeOn(Schedulers.io()),
+                .subscribeOn(Schedulers.io())
+                .map { Resource.Success(it, Source.LOCAL) },
             networkApi.getPosts(id)
                 .subscribeOn(Schedulers.io())
                 .doOnNext {
                     Log.d(TAG, "Get call for $id was successful")
                     database.postsDao().insert(it)
-                })
-            .map { Resource.Success(it) }
+                }
+                .map { Resource.Success(it, Source.REMOTE) })
+
 }

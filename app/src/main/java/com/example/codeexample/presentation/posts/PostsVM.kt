@@ -26,14 +26,10 @@ class PostsVM @Inject constructor(
     val postsLiveData: LiveData<Resource<List<Post>>>
         get() = _postsLiveData
 
-    init {
-        getPosts()
-    }
-
-    private fun getPosts() {
+    fun getPosts() {
         _postsLiveData.value = Resource.Loading()
         compositeDisposable.add(
-            repository.getPosts().observeOn(AndroidSchedulers.mainThread())
+            repository.getPosts().subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { items -> _postsLiveData.postValue(items) },
                     { Log.d(TAG, "Complete") })
